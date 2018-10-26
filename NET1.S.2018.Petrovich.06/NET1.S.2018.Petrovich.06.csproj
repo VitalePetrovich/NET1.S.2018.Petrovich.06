@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ArraySortInt">
-      <HintPath>..\..\NET1.A.2018.Petrovich.01\ArraySortInt\bin\Debug\ArraySortInt.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
