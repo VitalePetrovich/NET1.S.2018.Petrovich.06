@@ -6,28 +6,28 @@ using System.Threading.Tasks;
 
 namespace NET1.S._2018.Petrovich._06
 {
-    public interface IComparator
+    public interface IComparer
     {
-        bool Compare(int[] firstSubArray, int[] secondSubArray);
+        int Compare(int[] firstSubArray, int[] secondSubArray);
     }
 
     /// <summary>
     /// Class containing comparison logic by sum.
     /// </summary>
-    public class SortRowsBySum : IComparator
+    public class SortRowsBySum : IComparer
     {
-        public bool Compare(int[] firstSubArray, int[] secondSubArray)
+        public int Compare(int[] firstSubArray, int[] secondSubArray)
         {
-            if (firstSubArray == null && secondSubArray == null)
-                return false;
+            if (ReferenceEquals(firstSubArray, secondSubArray))
+                return 0;
 
-            if (firstSubArray == null)
-                return false;
+            if (ReferenceEquals(firstSubArray, null))
+                return -1;
 
-            if (secondSubArray == null)
-                return true;
+            if (ReferenceEquals(secondSubArray, null))
+                return 1;
 
-            return GetSum(firstSubArray) > GetSum(secondSubArray);
+            return GetSum(firstSubArray) - GetSum(secondSubArray);
         }
 
         private int GetSum(int[] array)
@@ -45,51 +45,29 @@ namespace NET1.S._2018.Petrovich._06
     /// <summary>
     /// Class containing comparison logic by sum.
     /// </summary>
-    public class SortRowsBySumDescending : IComparator
+    public class SortRowsBySumDescending : SortRowsBySum, IComparer
     {
-        public bool Compare(int[] firstSubArray, int[] secondSubArray)
-        {
-            if (firstSubArray == null && secondSubArray == null)
-                return false;
-
-            if (firstSubArray == null)
-                return true;
-
-            if (secondSubArray == null)
-                return false;
-
-            return GetSum(firstSubArray) < GetSum(secondSubArray);
-        }
-
-        private int GetSum(int[] array)
-        {
-            int sum = 0;
-            foreach (var item in array)
-            {
-                sum += item;
-            }
-
-            return sum;
-        }
+        public new int Compare(int[] firstSubArray, int[] secondSubArray) 
+            => -base.Compare(firstSubArray, secondSubArray);
     }
 
     /// <summary>
     /// Class containing comparison logic by max element.
     /// </summary>
-    public class SortRowsByMaxElement : IComparator
+    public class SortRowsByMaxElement : IComparer
     {
-        public bool Compare(int[] firstSubArray, int[] secondSubArray)
+        public int Compare(int[] firstSubArray, int[] secondSubArray)
         {
-            if (firstSubArray == null && secondSubArray == null)
-                return false;
+            if (ReferenceEquals(firstSubArray, secondSubArray))
+                return 0;
 
             if (firstSubArray == null)
-                return false;
+                return -1;
 
             if (secondSubArray == null)
-                return true;
+                return 1;
 
-            return GetMax(firstSubArray) > GetMax(secondSubArray);
+            return GetMax(firstSubArray) - GetMax(secondSubArray);
         }
 
         private int GetMax(int[] array)
@@ -110,54 +88,29 @@ namespace NET1.S._2018.Petrovich._06
     /// <summary>
     /// Class containing comparison logic by max element.
     /// </summary>
-    public class SortRowsByMaxElementDescending : IComparator
+    public class SortRowsByMaxElementDescending : SortRowsByMaxElement, IComparer
     {
-        public bool Compare(int[] firstSubArray, int[] secondSubArray)
-        {
-            if (firstSubArray == null && secondSubArray == null)
-                return false;
-
-            if (firstSubArray == null)
-                return true;
-
-            if (secondSubArray == null)
-                return false;
-
-            return GetMax(firstSubArray) < GetMax(secondSubArray);
-        }
-
-        private int GetMax(int[] array)
-        {
-            int indexOfMax = 0;
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] > array[indexOfMax])
-                {
-                    indexOfMax = i;
-                }
-            }
-
-            return array[indexOfMax];
-        }
+        public new int Compare(int[] firstSubArray, int[] secondSubArray)
+            => -base.Compare(firstSubArray, secondSubArray);
     }
 
     /// <summary>
     /// Class containing comparison logic by min element.
     /// </summary>
-    public class SortRowsByMinElement : IComparator
+    public class SortRowsByMinElement : IComparer
     {
-        public bool Compare(int[] firstSubArray, int[] secondSubArray)
+        public int Compare(int[] firstSubArray, int[] secondSubArray)
         {
-            if (firstSubArray == null && secondSubArray == null)
-                return false;
+            if (ReferenceEquals(firstSubArray, secondSubArray))
+                return 0;
 
             if (firstSubArray == null)
-                return false;
+                return -1;
 
             if (secondSubArray == null)
-                return true;
+                return 1;
 
-            return GetMin(firstSubArray) > GetMin(secondSubArray);
+            return GetMin(firstSubArray) - GetMin(secondSubArray);
         }
 
         private int GetMin(int[] array)
@@ -179,35 +132,10 @@ namespace NET1.S._2018.Petrovich._06
     /// <summary>
     /// Class containing comparison logic by min element.
     /// </summary>
-    public class SortRowsByMinElementDescending : IComparator
+    public class SortRowsByMinElementDescending : SortRowsByMinElement, IComparer
     {
-        public bool Compare(int[] firstSubArray, int[] secondSubArray)
-        {
-            if (firstSubArray == null && secondSubArray == null)
-                return false;
-
-            if (firstSubArray == null)
-                return true;
-
-            if (secondSubArray == null)
-                return false;
-
-            return GetMin(firstSubArray) < GetMin(secondSubArray);
-        }
-
-        private int GetMin(int[] array)
-        {
-            int indexOfMin = 0;
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] < array[indexOfMin])
-                {
-                    indexOfMin = i;
-                }
-            }
-
-            return array[indexOfMin];
-        }
+        public int Compare(int[] firstSubArray, int[] secondSubArray)
+            => -base.Compare(firstSubArray, secondSubArray);
     }
 
     /// <summary>
@@ -240,7 +168,7 @@ namespace NET1.S._2018.Petrovich._06
             int[][] inJuggedArray,
             int lowIndex,
             int highIndex,
-            IComparator comparator)
+            IComparer comparator)
         {
             if (inJuggedArray == null)
                 throw new ArgumentNullException(nameof(inJuggedArray));
@@ -261,7 +189,7 @@ namespace NET1.S._2018.Petrovich._06
             {
                 for (int j = lowIndex; j < highIndex - lowIndex; j++)
                 {
-                    if (comparator.Compare(inJuggedArray[j], inJuggedArray[j + 1]))
+                    if (comparator.Compare(inJuggedArray[j], inJuggedArray[j + 1]) > 0)
                     {
                         SwapReference(ref inJuggedArray[j], ref inJuggedArray[j + 1]);
                     }
@@ -284,7 +212,7 @@ namespace NET1.S._2018.Petrovich._06
         /// <exception cref="ArgumentException">
         /// Throws if mode is incorrect or high index less than low index.
         /// </exception>
-        public static void BubbleSortJuggedArray(int[][] inJuggedArray, IComparator comparator)
+        public static void BubbleSortJuggedArray(int[][] inJuggedArray, IComparer comparator)
         {
             if (inJuggedArray == null)
                 throw new ArgumentNullException(nameof(inJuggedArray));
