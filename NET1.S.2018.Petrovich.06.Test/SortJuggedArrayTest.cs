@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -31,6 +32,28 @@ namespace NET1.S._2018.Petrovich._06.Test
             BubbleSortJuggedArray(inJuggedArray, new SortRowsBySumDescending());
 
             Assert.IsTrue(IsEqualJuggedArray(inJuggedArray, expectedJuggedArray));
+        }
+
+        [Test]
+        public void BubbleSortJuggedArrayBySumRows1D_RightIn_RightOut()
+        {
+            int[][] inJuggedArray =
+            {
+                new[] { 3, 2, 2, 6 },
+                new[] { 10, 3 },
+                new[] { 1, 1, 1, 1 }
+            };
+
+            int[][] expectedJuggedArray =
+            {
+                new[] { 3, 2, 2, 6},
+                new[] { 10, 3 },
+                new[] { 1, 1, 1, 1 }
+            };
+
+            SortJuggedArrayDelegates.BubbleSortJuggedArray(inJuggedArray, (x, y) => y.GetSum().CompareTo(x.GetSum()));
+            
+            Assert.AreEqual(inJuggedArray, expectedJuggedArray);
         }
 
         [Test]
@@ -157,6 +180,32 @@ namespace NET1.S._2018.Petrovich._06.Test
             BubbleSortJuggedArray(inJuggedArray, 0, 1, new SortRowsByMinElement());
 
             Assert.IsTrue(IsEqualJuggedArray(inJuggedArray, expectedJuggedArray));
+        }
+
+        [Test]
+        public void BubbleSortJuggedArrayByMinRows2D_RightIn_RightOut()
+        {
+            int[][] inJuggedArray =
+            {
+                new[] { 9, 2, 13, 0 },
+                new[] { 17, 1, 90, -2 },
+                null,
+                new[] { -1 },
+                new[] { 5, 14, 2, 0 }
+            };
+
+            int[][] expectedJuggedArray =
+            {
+                new[] { 17, 1, 90, -2 },
+                new[] { 9, 2, 13, 0 },
+                null,
+                new[] { -1 },
+                new[] { 5, 14, 2, 0 }
+            };
+
+            SortJuggedArrayDelegates.BubbleSortJuggedArray(inJuggedArray, 0, 1, (x, y) => x.GetMin().CompareTo(y.GetMin()));
+
+            Assert.AreEqual(inJuggedArray, expectedJuggedArray);
         }
 
         [Test]
