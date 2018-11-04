@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using NET1.S._2018.Petrovich._06;
 using static NET1.S._2018.Petrovich._06.SortJuggedArray;
 
 namespace NET1.S._2018.Petrovich._06.Test
@@ -31,7 +32,7 @@ namespace NET1.S._2018.Petrovich._06.Test
             
             BubbleSortJuggedArray(inJuggedArray, new SortRowsBySumDescending());
 
-            Assert.IsTrue(IsEqualJuggedArray(inJuggedArray, expectedJuggedArray));
+            Assert.AreEqual(inJuggedArray, expectedJuggedArray);
         }
 
         [Test]
@@ -51,7 +52,7 @@ namespace NET1.S._2018.Petrovich._06.Test
                 new[] { 1, 1, 1, 1 }
             };
 
-            SortJuggedArrayDelegates.BubbleSortJuggedArray(inJuggedArray, (x, y) => y.GetSum().CompareTo(x.GetSum()));
+            BubbleSortJuggedArray(inJuggedArray, (x, y) => y.GetSum().CompareTo(x.GetSum()));
             
             Assert.AreEqual(inJuggedArray, expectedJuggedArray);
         }
@@ -81,7 +82,7 @@ namespace NET1.S._2018.Petrovich._06.Test
 
             BubbleSortJuggedArray(inJuggedArray, new SortRowsBySum());
 
-            Assert.IsTrue(IsEqualJuggedArray(inJuggedArray, expectedJuggedArray));
+            Assert.AreEqual(inJuggedArray, expectedJuggedArray);
         }
         
         [Test]
@@ -107,7 +108,7 @@ namespace NET1.S._2018.Petrovich._06.Test
 
             BubbleSortJuggedArray(inJuggedArray, new SortRowsByMaxElement());
 
-            Assert.IsTrue(IsEqualJuggedArray(inJuggedArray, expectedJuggedArray));
+            Assert.AreEqual(inJuggedArray, expectedJuggedArray);
         }
 
         [Test]
@@ -131,7 +132,7 @@ namespace NET1.S._2018.Petrovich._06.Test
 
             BubbleSortJuggedArray(inJuggedArray, 0, 2, new SortRowsByMaxElementDescending());
 
-            Assert.IsTrue(IsEqualJuggedArray(inJuggedArray, expectedJuggedArray));
+            Assert.AreEqual(inJuggedArray, expectedJuggedArray);
         }
 
         [Test]
@@ -153,7 +154,7 @@ namespace NET1.S._2018.Petrovich._06.Test
 
             BubbleSortJuggedArray(inJuggedArray, new SortRowsByMinElementDescending());
 
-            Assert.IsTrue(IsEqualJuggedArray(inJuggedArray, expectedJuggedArray));
+            Assert.AreEqual(inJuggedArray, expectedJuggedArray);
         }
 
         [Test]
@@ -179,7 +180,7 @@ namespace NET1.S._2018.Petrovich._06.Test
 
             BubbleSortJuggedArray(inJuggedArray, 0, 1, new SortRowsByMinElement());
 
-            Assert.IsTrue(IsEqualJuggedArray(inJuggedArray, expectedJuggedArray));
+            Assert.AreEqual(inJuggedArray, expectedJuggedArray);
         }
 
         [Test]
@@ -203,7 +204,7 @@ namespace NET1.S._2018.Petrovich._06.Test
                 new[] { 5, 14, 2, 0 }
             };
 
-            SortJuggedArrayDelegates.BubbleSortJuggedArray(inJuggedArray, 0, 1, (x, y) => x.GetMin().CompareTo(y.GetMin()));
+            BubbleSortJuggedArray(inJuggedArray, 0, 1, (x, y) => x.GetMin().CompareTo(y.GetMin()));
 
             Assert.AreEqual(inJuggedArray, expectedJuggedArray);
         }
@@ -211,15 +212,7 @@ namespace NET1.S._2018.Petrovich._06.Test
         [Test]
         public void BubbleSortJuggedArray_WithNullReferenceArray()
             => Assert.Throws<ArgumentNullException>(() => BubbleSortJuggedArray(null, new SortRowsBySum()));
-
-        [Test]
-        public void BubbleSortJuggedArray_WithNullReferenceComparer()
-        {
-            int[][] array = { new[] { 0 } };
-
-            Assert.Throws<ArgumentNullException>(() => BubbleSortJuggedArray(array, null));
-        }
-
+        
         [Test]
         public void BubbleSortJuggedArray_WithLeftEdgeGraterThanRight()
         {
@@ -228,37 +221,56 @@ namespace NET1.S._2018.Petrovich._06.Test
             Assert.Throws<ArgumentException>(() => BubbleSortJuggedArray(array, 10, 1, new SortRowsBySum()));
         }
 
-        private bool IsEqualJuggedArray(int[][] firstArray, int[][] secondArray)
+        [Test]
+        public void BubbleSortJuggedArrayByMaxAdvancedImplementWithComparer_RightIn_RightOut()
         {
-            if (firstArray == null && secondArray == null)
-                return true;
-
-            if (firstArray == null || secondArray == null)
-                return false;
-
-            if (firstArray.Length != secondArray.Length)
-                return false;
-
-            for (int i = 0; i < firstArray.Length; i++)
+            int[][] inJuggedArray =
             {
-                if (firstArray[i] == null && secondArray[i] == null)
-                    continue;
+                new[] { 3, 2, 2, 6 },
+                new[] { 10, 3 },
+                null,
+                null,
+                new[] { 1, 1, 1, 1 }
+            };
 
-                if (firstArray[i] == null || secondArray[i] == null)
-                    break;
+            int[][] expectedJuggedArray =
+            {
+                null,
+                null,
+                new[] { 1, 1, 1, 1 },
+                new[] { 3, 2, 2, 6},
+                new[] { 10, 3 }
+            };
 
-                if (firstArray[i].Length != secondArray[i].Length)
-                    return false;
+            SortJuggedArrayImplementationForTests.BubbleSortJuggedArray(inJuggedArray, new SortRowsByMaxElement());
 
-                for (int j = 0; j < firstArray[i].Length; j++)
-                {
-                    if (firstArray[i][j] != secondArray[i][j])
-                        return false;
-                }
-            }
+            Assert.AreEqual(inJuggedArray, expectedJuggedArray);
+        }
 
-            return true;
+        [Test]
+        public void BubbleSortJuggedArrayByMaxAdvancedImplementWithDelegate_RightIn_RightOut()
+        {
+            int[][] inJuggedArray =
+            {
+                new[] { 3, 2, 2, 6 },
+                new[] { 10, 3 },
+                null,
+                null,
+                new[] { 1, 1, 1, 1 }
+            };
+
+            int[][] expectedJuggedArray =
+            {
+                null,
+                null,
+                new[] { 1, 1, 1, 1 },
+                new[] { 3, 2, 2, 6},
+                new[] { 10, 3 }
+            };
+
+            SortJuggedArrayImplementationForTests.BubbleSortJuggedArray(inJuggedArray, (x, y) => x.GetMax().CompareTo(y.GetMax()));
+
+            Assert.AreEqual(inJuggedArray, expectedJuggedArray);
         }
     }
-
 }

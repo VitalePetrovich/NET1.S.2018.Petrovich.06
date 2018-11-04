@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -116,7 +117,7 @@ namespace NET1.S._2018.Petrovich._06
         /// High index of sub-array for sorting.
         /// </param>
         /// <param name="comparator">
-        /// Class instance containing comparison logic.
+        /// Instance class containing comparison logic.
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// Throw if reference of jugged array or comparator is null.
@@ -164,7 +165,7 @@ namespace NET1.S._2018.Petrovich._06
         /// Array for sorting.
         /// </param>
         /// <param name="comparator">
-        /// Class instance containing comparison logic.
+        /// Instance class containing comparison logic.
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// Throw if reference of jugged array or comparator is null.
@@ -179,58 +180,30 @@ namespace NET1.S._2018.Petrovich._06
 
             BubbleSortJuggedArray(inJuggedArray, 0, inJuggedArray.Length - 1, comparator);
         }
-        
-        public static int GetSum(this int[] array)
-        {
-            int sum = 0;
-            foreach (var item in array)
-            {
-                sum += item;
-            }
 
-            return sum;
-        }
-
-        public static int GetMax(this int[] array)
-        {
-            int indexOfMax = 0;
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] > array[indexOfMax])
-                {
-                    indexOfMax = i;
-                }
-            }
-
-            return array[indexOfMax];
-        }
-        
-        public static int GetMin(this int[] array)
-        {
-            int indexOfMin = 0;
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] < array[indexOfMin])
-                {
-                    indexOfMin = i;
-                }
-            }
-
-            return array[indexOfMin];
-        }
-        
-        private static void SwapReference(ref int[] refA, ref int[] refB)
-        {
-            int[] temp = refA;
-            refA = refB;
-            refB = temp;
-        }
-    }
-
-    public static class SortJuggedArrayDelegates
-    {
         public delegate int DelegateComparator(int[] x, int[] y);
 
+        /// <summary>
+        /// Bubble sorting jugged array.
+        /// </summary>
+        /// <param name="inJuggedArray">
+        /// Array for sorting.
+        /// </param>
+        /// <param name="lowIndex">
+        /// Low index of sub-array for sorting.
+        /// </param>
+        /// <param name="highIndex">
+        /// High index of sub-array for sorting.
+        /// </param>
+        /// <param name="comparator">
+        /// Delegate-comparer containing comparison logic.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Throw if reference of jugged array or comparator is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Throws if mode is incorrect or high index less than low index.
+        /// </exception>
         public static void BubbleSortJuggedArray(
             int[][] inJuggedArray,
             int lowIndex,
@@ -264,6 +237,21 @@ namespace NET1.S._2018.Petrovich._06
             }
         }
 
+        /// <summary>
+        /// Bubble sorting jugged array.
+        /// </summary>
+        /// <param name="inJuggedArray">
+        /// Array for sorting.
+        /// </param>
+        /// <param name="comparator">
+        /// Delegate-comparer containing comparison logic.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Throw if reference of jugged array or comparator is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Throws if mode is incorrect or high index less than low index.
+        /// </exception>
         public static void BubbleSortJuggedArray(int[][] inJuggedArray, DelegateComparator comparator)
         {
             if (ReferenceEquals(inJuggedArray, null))
@@ -272,6 +260,80 @@ namespace NET1.S._2018.Petrovich._06
             BubbleSortJuggedArray(inJuggedArray, 0, inJuggedArray.Length - 1, comparator);
         }
 
+        /// <summary>
+        /// Calculate sum of element in array.
+        /// </summary>
+        /// <param name="array">
+        /// Array.
+        /// </param>
+        /// <returns>
+        /// Sum.</returns>
+        public static int GetSum(this int[] array)
+        {
+            if (ReferenceEquals(array, null))
+                return int.MinValue;
+
+            int sum = 0;
+            foreach (var item in array)
+            {
+                sum += item;
+            }
+
+            return sum;
+        }
+
+        /// <summary>
+        /// Return max element of array.
+        /// </summary>
+        /// <param name="array">
+        /// Array.
+        /// </param>
+        /// <returns>
+        /// Max element.
+        /// </returns>
+        public static int GetMax(this int[] array)
+        {
+            if (ReferenceEquals(array, null))
+                return int.MinValue;
+
+            int indexOfMax = 0;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] > array[indexOfMax])
+                {
+                    indexOfMax = i;
+                }
+            }
+
+            return array[indexOfMax];
+        }
+
+        /// <summary>
+        /// Return min element of array.
+        /// </summary>
+        /// <param name="array">
+        /// Array.
+        /// </param>
+        /// <returns>
+        /// Min element.
+        /// </returns>
+        public static int GetMin(this int[] array)
+        {
+            if (ReferenceEquals(array, null))
+                return int.MinValue;
+
+            int indexOfMin = 0;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] < array[indexOfMin])
+                {
+                    indexOfMin = i;
+                }
+            }
+
+            return array[indexOfMin];
+        }
+        
         private static void SwapReference(ref int[] refA, ref int[] refB)
         {
             int[] temp = refA;
@@ -280,4 +342,50 @@ namespace NET1.S._2018.Petrovich._06
         }
     }
 
+    public static class SortJuggedArrayImplementationForTests
+    {
+        public delegate int DelegateComparator(int[] x, int[] y);
+
+        /// <summary>
+        /// Class-adapter for delegate.
+        /// </summary>
+        public class Adapter : IComparer
+        {
+            private readonly DelegateComparator comparator;
+
+            public Adapter(DelegateComparator comparator)
+            {
+                this.comparator = comparator;
+            }
+
+            public int Compare(int[] a, int[] b)
+            {
+                return comparator.Invoke(a, b);
+            }
+        }
+
+        /// <summary>
+        /// Call version with class-comparer, invoke version with delegate.
+        /// </summary>
+        public static void BubbleSortJuggedArray(int[][] inJuggedArray, IComparer comparator)
+            => SortJuggedArray.BubbleSortJuggedArray(inJuggedArray, comparator.Compare);
+
+        /// <summary>
+        /// Call version with class-comparer, invoke version with delegate.
+        /// </summary>
+        public static void BubbleSortJuggedArray(int[][] inJuggedArray, int lowIndex, int highIndex, IComparer comparator)
+            => SortJuggedArray.BubbleSortJuggedArray(inJuggedArray, lowIndex, highIndex, comparator.Compare);
+
+        /// <summary>
+        /// Call version with delegate, invoke version with class-comparer.
+        /// </summary>
+        public static void BubbleSortJuggedArray(int[][] inJuggedArray, DelegateComparator comparator)
+            => SortJuggedArray.BubbleSortJuggedArray(inJuggedArray, new Adapter(comparator));
+
+        /// <summary>
+        /// Call version with delegate, invoke version with class-comparer.
+        /// </summary>
+        public static void BubbleSortJuggedArray(int[][] inJuggedArray, int lowIndex, int highIndex, DelegateComparator comparator)
+            => SortJuggedArray.BubbleSortJuggedArray(inJuggedArray, lowIndex, highIndex, new Adapter(comparator));
+    }
 }
